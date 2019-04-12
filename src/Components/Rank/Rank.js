@@ -2,13 +2,14 @@ import React, { Component } from "react";
 
 class Rank extends Component {
   render() {
+    const {userName, entries} = this.props;
     return (
       <div>
-        <div className="white">
-          {"User, your current rank is..."}
+        <div className="white f3">
+          {`${userName}, your current entry count is...`}
         </div>
         <div className="white f1">
-            {"#1!"}
+            {entries}
         </div>
       </div>
     );

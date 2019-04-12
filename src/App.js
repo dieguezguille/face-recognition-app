@@ -116,18 +116,43 @@ class App extends Component {
     app.models
       .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
       .then(response => {
+        //Si recibo respuesta de Clarifai
+        if (response) {
+          //Actualizo la cantidad de entries del usuario
+          fetch("http://localhost:3000/image", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              //Primero envio la id del usuario en JSON al server
+              id: this.state.user.id
+            })
+          })
+            //Parseo la respuesta del server a JSON
+            .then(response => response.json())
+            .then(count => {
+              //Actualizo las entries del usuario que vienen del server
+              this.setState(Object.assign(this.state.user, { entries: count }));
+            });
+        }
+        //Dibujo el marco sobre la cara detectada
         this.displayFaceBox(this.calculateFaceLocation(response));
       })
       .catch(error => console.log(error));
   };
 
-  onRouteChange = route => {
+  onRouteChange = (route, loggedUserName, loggedUserEntries, loggedUserId) => {
     if (route === "SignOut") {
       this.setState({ isSignedIn: false });
     } else if (route === "Home") {
       this.setState({ isSignedIn: true });
-    }
-    else if (route === "SignIn"){
+      this.setState(
+        Object.assign(this.state.user, {
+          name: loggedUserName,
+          entries: loggedUserEntries,
+          id: loggedUserId
+        })
+      );
+    } else if (route === "SignIn") {
       this.setState({ isSignedIn: false });
     }
     this.setState({
@@ -162,7 +187,10 @@ class App extends Component {
           //Returns Home
           <div>
             <Logo />
-            <Rank />
+            <Rank
+              userName={this.state.user.name}
+              entries={this.state.user.entries}
+            />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}

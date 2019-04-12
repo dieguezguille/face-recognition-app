@@ -28,8 +28,14 @@ class SignIn extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        if (data === "success") {
-          this.props.onRouteChange("Home");
+        if (data) {
+          const responseStatus = data.status;
+          const loggedUserName = data.name;
+          const loggedUserEntries = data.entries;
+          const loggedUserId = data.id;
+          if (responseStatus === "success"){
+            this.props.onRouteChange("Home", loggedUserName, loggedUserEntries, loggedUserId);
+          }
         }
       });
   };
