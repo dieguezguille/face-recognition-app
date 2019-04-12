@@ -1,5 +1,12 @@
 .App {
   text-align: center;
+  background-image: radial-gradient(circle, #051937, #062055, #202472, #43218b, #6c0d9f);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
 }
 
 .App-logo {
@@ -23,11 +30,16 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.center{
+  display: flex;
+  justify-content: center;
+}
+
+.particles{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
 }
