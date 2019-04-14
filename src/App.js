@@ -51,7 +51,18 @@ const particlesOptions = {
   },
   retina_detect: true
 };
-
+const initialState = {
+  input: "",
+  imageUrl: "",
+  box: {},
+  route: "SignIn",
+  isSignedIn: false,
+  user: {
+    id: "",
+    name: "",
+    entries: 0
+  }
+};
 class App extends Component {
   constructor() {
     super();
@@ -135,7 +146,8 @@ class App extends Component {
             .then(count => {
               //Actualizo las entries del usuario que vienen del server
               this.setState(Object.assign(this.state.user, { entries: count }));
-            });
+            })
+            .catch(err => {console.log(err)})
         }
         //Dibujo el marco sobre la cara detectada
         this.displayFaceBox(this.calculateFaceLocation(response));
@@ -145,7 +157,7 @@ class App extends Component {
 
   onRouteChange = (route, loggedUserEntries, loggedUserId, loggedUserName) => {
     if (route === "SignOut") {
-      this.setState({ isSignedIn: false });
+      this.setState(initialState);
     } else if (route === "Home") {
       this.setState({
         isSignedIn: true,
