@@ -28,15 +28,22 @@ class SignIn extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        if (data) {
-          const responseStatus = data.status;
+
+        if (data.email === this.state.signInEmail){
+
+          const loggedUserId = data.id;
           const loggedUserName = data.name;
           const loggedUserEntries = data.entries;
-          const loggedUserId = data.id;
-          if (responseStatus === "success"){
-            this.props.onRouteChange("Home", loggedUserName, loggedUserEntries, loggedUserId);
-          }
+          //Tomo los datos de la response y los paso a la funcion de App
+          this.props.onRouteChange("Home", loggedUserEntries, loggedUserId, loggedUserName);
         }
+
+        // if (data) {
+        //   const responseStatus = data.status;
+        //   if (responseStatus === "success"){
+        //     console.log(responseStatus);
+        //   }
+        // }
       });
   };
 

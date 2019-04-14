@@ -23,6 +23,7 @@ class Register extends Component {
   };
 
   onSubmitRegister = () => {
+    //Serializo la solicitud y la mando al server
     fetch("http://localhost:3000/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -31,6 +32,7 @@ class Register extends Component {
         password: this.state.registerPassword,
         name: this.state.registerName
       })
+      //Tomo la respuesta del server y la parseo
     })
       .then(response => response.json())
       .then(user => {

@@ -64,17 +64,20 @@ class App extends Component {
       user: {
         id: "",
         name: "",
-        entries: 0,
-        joined: ""
+        entries: 0
       }
     };
   }
 
-  // componentDidMount() {
-  //   fetch("http://localhost:3000")
-  //     .then(response => response.json())
-  //     .then(receivedJSON => console.log(receivedJSON));
-  // }
+  loadUser = data => {
+    this.setState(
+      Object.assign(this.state.user, {
+        id: data.id,
+        name: data.name,
+        entries: data.entries
+      })
+    );
+  };
 
   calculateFaceLocation = response => {
     const clarifaiFace =
@@ -140,36 +143,23 @@ class App extends Component {
       .catch(error => console.log(error));
   };
 
-  onRouteChange = (route, loggedUserName, loggedUserEntries, loggedUserId) => {
+  onRouteChange = (route, loggedUserEntries, loggedUserId, loggedUserName) => {
     if (route === "SignOut") {
       this.setState({ isSignedIn: false });
     } else if (route === "Home") {
-      this.setState({ isSignedIn: true });
-      this.setState(
-        Object.assign(this.state.user, {
+      this.setState({
+        isSignedIn: true,
+        user: {
+          id: loggedUserId,
           name: loggedUserName,
-          entries: loggedUserEntries,
-          id: loggedUserId
-        })
-      );
+          entries: loggedUserEntries
+        }
+      });
     } else if (route === "SignIn") {
       this.setState({ isSignedIn: false });
     }
     this.setState({
       route: route
-    });
-  };
-
-  loadUser = data => {
-    this.setState({
-      user: {
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        entries: data.entries,
-        joined: data.joined,
-        password: data.password
-      }
     });
   };
 
@@ -188,7 +178,7 @@ class App extends Component {
           <div>
             <Logo />
             <Rank
-              userName={this.state.user.name}
+              name={this.state.user.name}
               entries={this.state.user.entries}
             />
             <ImageLinkForm
@@ -199,7 +189,7 @@ class App extends Component {
           </div>
         ) : route === "SignIn" ? (
           //Returns SignIn
-          <SignIn onRouteChange={this.onRouteChange} />
+          <SignIn onRouteChange={this.onRouteChange} elRodre={this.rodre} />
         ) : (
           //Returns Register
           <Register
