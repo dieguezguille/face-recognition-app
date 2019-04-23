@@ -23,27 +23,34 @@ class Register extends Component {
   };
 
   onSubmitRegister = () => {
-    //Serializo la solicitud y la mando al server
-    fetch("http://localhost:3000/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: this.state.registerEmail,
-        password: this.state.registerPassword,
-        name: this.state.registerName
+    if (!this.state.registerEmail || !this.state.registerPassword || !this.state.registerName) {
+      return "Unable to send request. Invalid form data.";
+    }
+    else {
+      //Serializo la solicitud y la mando al server
+      fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: this.state.registerEmail,
+          password: this.state.registerPassword,
+          name: this.state.registerName
+        })
+        //Tomo la respuesta del server y la parseo
       })
-      //Tomo la respuesta del server y la parseo
-    })
-      .then(response => response.json())
-      .then(user => {
-        if (user) {
-          const loggedUserId = user.id;
-          const loggedUserName = user.name;
-          const loggedUserEntries = user.entries;
-          this.props.loadUser(user);
-          this.props.onRouteChange("Home", loggedUserEntries, loggedUserId, loggedUserName);
-        }
-      });
+        .then(response => response.json())
+        .then(user => {
+          if (user) {
+            const loggedUserId = user.id;
+            const loggedUserName = user.name;
+            const loggedUserEntries = user.entries;
+            this.props.loadUser(user.id);
+            this.props.onRouteChange("Home", loggedUserEntries, loggedUserId, loggedUserName);
+          }
+        }).catch(err => {
+          return err;
+        });
+    }
   };
 
   render() {
